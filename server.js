@@ -17,13 +17,23 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 
+app.get("/read", async (req, res) => {
+  TaskModel.find({}, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 
 app.post("/addTask", async (req, res) => {
    const task = req.body.task;
 
   const newTask = new TaskModel({ task: task });
   await newTask.save();
-  res.send(newTask);
+  res.send("inserted data");
 });
 
 app.put("/update", async (req, res) => {
@@ -43,21 +53,12 @@ app.put("/update", async (req, res) => {
 
 })
 
-app.get("/read", async (req, res) => {
-  TaskModel.find({}, (err, result) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(result);
-    }
-  });
-});
 
 
 app.delete("/delete/:id", async (req, res) => {
   const id = req.params.id;
 
-  await TaskModel.findByIdAndRemove(id);
+  await TaskModel.findByIdAndRemove(id).exec();
   res.send("item deleted!");
 })
 

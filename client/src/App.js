@@ -12,8 +12,8 @@ function App() {
   const addTask = () => {
       Axios.post("http://localhost:8080/addTask",
        { task: task })
-       .then((response) => {
-        setListOfTask([...listOfTasks, {_id: response.data.id, task: task}])
+       .then(() => {
+        setListOfTask([...listOfTasks, { task: task}])
        })
   };
 
@@ -30,11 +30,12 @@ function App() {
 
   const deleteTask = (id) => {
     Axios.delete(`http://localhost:8080/delete/${id}`).then(() => {
-        setListOfTask(
-          listOfTasks.filter((val) => {
-            return val._id !== id;
-          })
-        )
+        // setListOfTask(
+        //   listOfTasks.filter((val) => {
+        //     return val._id !== id;
+        //   })
+        // )
+        location.reload();
     })
   }
 

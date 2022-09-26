@@ -36,10 +36,13 @@ $ cd to-do-app
 
 $ npm install
 
+$ cd client
+
+$ npm i
 ```
 ### To run the code
 ```bash
-$ npm start
+$ npm run dev
 ```
 
 
