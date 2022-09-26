@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;400&display=swap');
+
+.todoitem {
+  margin: 2rem 0;
+  font-family: "Dosis", sans-serif;
+}
+
+.todoitem h1 {
+  background: #ee6f57;
+  padding: 1rem;
+  color: #f4f4f4;
+  transition: background 0.5s ease;
+}
+
+.todoitem h1:hover {
+  background: #1f3c88;
+}
+
+.todoitem:hover {
+  cursor: pointer;
+}
