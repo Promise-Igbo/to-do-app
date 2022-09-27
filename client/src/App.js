@@ -30,12 +30,11 @@ function App() {
 
   const deleteTask = (id) => {
     Axios.delete(`http://localhost:8080/delete/${id}`).then(() => {
-        // setListOfTask(
-        //   listOfTasks.filter((val) => {
-        //     return val._id !== id;
-        //   })
-        // )
-        location.reload();
+        setListOfTask(
+          listOfTasks.filter((val) => {
+            return val._id !== id;
+          })
+        )
     })
   }
 
@@ -47,7 +46,9 @@ function App() {
    .catch(() => {
      console.log("Err");
    });
-  }, []);
+  }, [setListOfTask, listOfTasks]);
+
+
 
   return (
     <div className="App">
@@ -63,8 +64,8 @@ function App() {
             />
       <button className='submitbtn' onClick={addTask}>Add task</button>
 
-      { listOfTasks.map((val) => (
-            <div key={val.id} className='todoitem'>
+      { listOfTasks.length > 0 && listOfTasks.map((val) => (
+            <div key={val._id} id={val._id} className='todoitem'>
                  <h1>{val.task}</h1>
                  <button 
                  className='updatebtn'
@@ -76,9 +77,9 @@ function App() {
                  </button>
                  <button 
                  className='removebtn'
-                 onClick={()=> {
-                  deleteTask(val._id);
-               }}
+                 onClick={()=> { 
+                  deleteTask(val._id) 
+                }}
                  >
                   Remove
                   </button>
