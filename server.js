@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const TaskModel = require('./models/task')
+const TaskModel = require('./models/task');
+const UserModel = require("./models/user")
 const { v4: uuidv4 } = require('uuid');
 const app = express();
 
@@ -27,6 +28,33 @@ app.get("/read", async (req, res) => {
   });
 });
 
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  const user = await UserModel.findOne({ username })
+
+  if(user){
+    res.status(500);
+    res.send('user already exist');
+    return;
+  }
+
+  await UserModel.create({ username, password })
+  res.send('success');
+})
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  const user = await UserModel.findOne({ username })
+
+  if(!user || user.password !== password){
+    res.status(503);
+    res.send('invalid login');
+    return;
+  }
+  res.send('success');
+})
 
 app.post("/addTask", async (req, res) => {
    const task = req.body.task;
