@@ -1,40 +1,54 @@
-// import { Axios } from 'axios';
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { credentialContext } from '../App';
-import { handleErrors } from './Register';
+import Axios from 'axios';
+import React, { useState, useEffect  } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCookies } from "react-cookie";
+import { ToastContainer, toast }from 'react-toastify';
+
+
 
 const Login = () => {
-   const [username, setUserName] = useState('');
+   const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
-   const [error, setError] = useState('');
+   const [error, setError] = useState("");
    const navigate = useNavigate();
-   const [, setCredentials] = useContext(credentialContext);
+   const [cookies] = useCookies([]);
 
+   useEffect(() => {
+    if (cookies.jwt) {
+      navigate("/");
+    }
+  }, [cookies, navigate]);
+   
+   const generateError = err => toast.error(err, {
+    position:"bottom-right"
+ });
 
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    fetch("http://localhost:8080/login", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    }).then(handleErrors)
-      .then( response => {
-        setCredentials({
-          username,
-          password,
-        })
-        navigate('/');
-      }).catch((error) => {
-       setError(error.message);
-    })
+const submitHandler = async (e) => {
+  e.preventDefault();
+  try {
+    const { data } =  await Axios.post("http://localhost:8080/login", {
+      email,
+      password,
+  }, {
+    withCredentials: true,
   }
+  );
+  if(data){
+     if(data.errors){
+         const {email, password} = data.errors;
+           if(email) generateError(email)
+           else if(password) generateError(password)
+     }else{
+      navigate('/');
+     }
+  }
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+
 
 
   return (
@@ -43,14 +57,13 @@ const Login = () => {
       {error && <span style={{ color: "red"}}>{error}</span>}
       <form onSubmit={submitHandler}>
   <div className="mb-3">
-    <label className="form-label">USERNAME</label>
+    <label className="form-label">EMAIL</label>
     <input 
-    type="text" 
+    type="email" 
     className="form-control" 
     aria-describedby="emailHelp" 
-    required 
-    placeholder='your username' 
-    onChange={(e) => setUserName(e.target.value)}
+    placeholder='your email' 
+    onChange={(e) => setEmail(e.target.value)}
     />
   </div>
   <div className="mb-3">
@@ -58,13 +71,14 @@ const Login = () => {
     <input 
     type="password" 
     className="form-control" 
-    required 
     placeholder='your password'
     onChange={(e) => setPassword(e.target.value)}
     />
   </div>
   <button type="submit" className="btn btn-primary">Log in</button>
 </form>
+<span>Create a new account? <Link to="/register">Register</Link></span>
+<ToastContainer />
     </div>
   )
 }
