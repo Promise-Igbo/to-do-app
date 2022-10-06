@@ -10,7 +10,7 @@ const Register = () => {
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const navigate = useNavigate();
-   const [error, setError] = useState("");
+   const [error, ] = useState("");
    const [cookies] = useCookies(["cookie-name"]);
 
    useEffect(() => {
