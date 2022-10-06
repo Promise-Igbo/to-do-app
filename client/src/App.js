@@ -1,32 +1,23 @@
 import React, { useState } from 'react'
-// import TaskItem from './components/TaskItem';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-import Welcome from './components/Welcome';
 import Register from './components/Register';
-import NavBar from './components/NavBar';
 import Login from './components/Login';
-
-
-export const credentialContext = React.createContext();
-
+import "react-toastify/dist/ReactToastify.css"
+import Cards from './components/Cards';
+import Header from './components/Header';
 
 const App = () => {
-const credentialState = useState(null)
 
   return (
     <div>
-      <credentialContext.Provider value={credentialState}>
+      <Header />
       <Router>
-        <NavBar />
         <Routes>
-        <Route  path='/' element={<Welcome />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-        {/* <Route path='/tasks' element={<TaskItem />} /> */}
+        <Route exact  path='/register' element={<Register />} />
+        <Route exact  path='/login' element={<Login />} />
+        <Route exact path="/" element={<Cards />} />
         </Routes>
-
       </Router>
-      </credentialContext.Provider>
     </div>
   )
 }
