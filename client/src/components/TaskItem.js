@@ -11,7 +11,9 @@ function TaskItem() {
 
   const addTask = () => {
       Axios.post("http://localhost:8080/addTask",
-       { task: task })
+       { task: task }, {
+        withCredentials: true,
+       })
        .then(() => {
         setListOfTask([...listOfTasks, { task: task}])
        })
@@ -22,7 +24,9 @@ function TaskItem() {
   const updateTask = (id) => {
       const newTask = prompt("Enter new task");
 
-      Axios.put("http://localhost:8080/update", { newTask: newTask, id: id}).then(() => {
+      Axios.put("http://localhost:8080/update", { newTask: newTask, id: id}, {
+        withCredentials: true,
+       }).then(() => {
         setListOfTask(listOfTasks.map((val) => {
            return val._id === id ? { _id: id, task: newTask} : val;
         }))
@@ -30,7 +34,9 @@ function TaskItem() {
   }
 
   const deleteTask = (id) => {
-    Axios.delete(`http://localhost:8080/delete/${id}`).then(() => {
+    Axios.delete(`http://localhost:8080/delete/${id}`, {
+      withCredentials: true,
+     }).then(() => {
         setListOfTask(
           listOfTasks.filter((val) => {
             return val._id !== id;
