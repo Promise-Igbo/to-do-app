@@ -1,47 +1,56 @@
-// import { Axios } from 'axios';
-import React, { useState, useContext } from 'react';
+import Axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { credentialContext } from '../App';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast }from 'react-toastify';
+import { useCookies } from "react-cookie";
 
- export const handleErrors = async (response) => {
-  if(!response.ok) {
-    const { message } = await response.json();
-    throw Error(message);
-  }
-   return response;
-}
 
 const Register = () => {
-   const [username, setUserName] = useState('');
+   const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
-   const [error, setError] = useState('');
    const navigate = useNavigate();
-   const [, setCredentials] = useContext(credentialContext);
+   const [error, setError] = useState("");
+   const [cookies] = useCookies(["cookie-name"]);
+
+   useEffect(() => {
+    if (cookies.jwt) {
+      navigate("/");
+    }
+  }, [cookies, navigate]);
 
 
 
-  const submitHandler = (e) => {
+
+   const generateError = err => toast.error(err, {
+      position:"bottom-right"
+   });
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    fetch("http://localhost:8080/register", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
+    try {
+      const { data } =  await Axios.post("http://localhost:8080/register", {
+        email,
         password,
-      }),
-    }).then(handleErrors)
-      .then( response => {
-        setCredentials({
-          username,
-          password,
-        })
+    }, {
+      withCredentials: true,
+    }
+    );
+    if(data){
+       if(data.errors){
+           const {email, password} = data.errors;
+             if(email) generateError(email)
+             else if(password) generateError(password)
+       }else{
         navigate('/');
-      }).catch((error) => {
-       setError(error.message);
-    })
-  }
+       }
+    }
+    } catch (error) {
+      console.log(error);
+    }
+
+}
+
 
 
   return (
@@ -50,14 +59,13 @@ const Register = () => {
       {error && <span style={{ color: "red"}}>{error}</span>}
       <form onSubmit={submitHandler}>
   <div className="mb-3">
-    <label className="form-label">USERNAME</label>
+    <label className="form-label">EMAIL</label>
     <input 
-    type="text" 
+    type="email" 
     className="form-control" 
     aria-describedby="emailHelp" 
-    required 
-    placeholder='your username' 
-    onChange={(e) => setUserName(e.target.value)}
+    placeholder='your email' 
+    onChange={(e) => setEmail(e.target.value)}
     />
   </div>
   <div className="mb-3">
@@ -65,13 +73,14 @@ const Register = () => {
     <input 
     type="password" 
     className="form-control" 
-    required 
     placeholder='your password'
     onChange={(e) => setPassword(e.target.value)}
     />
   </div>
   <button type="submit" className="btn btn-primary">Register</button>
 </form>
+<span>Already have an account? <Link to="/login">Log in</Link></span>
+  <ToastContainer />
     </div>
   )
 }

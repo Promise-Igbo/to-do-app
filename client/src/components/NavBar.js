@@ -1,11 +1,8 @@
-import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { BsCardChecklist } from 'react-icons/bs'
-import { credentialContext } from '../App';
 import './NavBar.css';
 
 const NavBar = () => {
-  const [credentials] = useContext(credentialContext);
 
   const Links = [
     {
@@ -29,7 +26,6 @@ const NavBar = () => {
     <nav className="navbar">
       <BsCardChecklist className='logo' />
       <div className="navbar-title"><h1 className="title"> TO DO LIST </h1></div>
-      {!credentials && 
       <ul className="menu">
         {Links.map((link) => (
           <li key={link.id} className="li-links">
@@ -39,7 +35,6 @@ const NavBar = () => {
           </li>
         ))}
       </ul>
-           }
     </nav>
   );
 };
