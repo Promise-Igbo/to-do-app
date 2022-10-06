@@ -3,20 +3,36 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const TaskModel = require('./models/task');
 const UserModel = require("./models/user")
+const authRoutes = require("./Routes/AuthRoutes");
+const cookieParser = require('cookie-parser');
 const { v4: uuidv4 } = require('uuid');
 const app = express();
+const { checkUser } = require("./Middlewares/authMiddleware");
 
-app.use(cors());
+
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "POST", "DELETE", "PUT"],
+  credentials: true,
+}))
 
 // middleware for data on post request
+app.use(cookieParser());
 app.use(express.json())
+app.use("/", authRoutes);
 
 
 /// DATABASE CONNECTION
 mongoose.connect(
   "mongodb://localhost:27017/TodoList?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
-  { useNewUrlParser: true }
-);
+  { 
+    useNewUrlParser: true,
+  }
+).then(() => {
+  console.log("DB connected successfully");
+}).catch((err) => {
+  console.log(err.message);
+})
 
 app.get("/read", async (req, res) => {
   TaskModel.find({}, (err, result) => {
@@ -28,35 +44,8 @@ app.get("/read", async (req, res) => {
   });
 });
 
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
 
-  const user = await UserModel.findOne({ username })
-
-  if(user){
-    res.status(500);
-    res.send('user already exist');
-    return;
-  }
-
-  await UserModel.create({ username, password })
-  res.send('success');
-})
-
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
-  const user = await UserModel.findOne({ username })
-
-  if(!user || user.password !== password){
-    res.status(503);
-    res.send('invalid login');
-    return;
-  }
-  res.send('success');
-})
-
-app.post("/addTask", async (req, res) => {
+app.post("/addTask", async (req, res ) => {
    const task = req.body.task;
 
   const newTask = new TaskModel({ task: task });
