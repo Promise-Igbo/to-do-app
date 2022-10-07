@@ -1,12 +1,13 @@
-// const { read, addTask, updateTask, removeTask } = require("../Controllers/AuthControllers");
+const { read, addTask, updateTask, removeTask } = require("../Controllers/AuthControllers");
+const { checkUser } = require("../Middlewares/authMiddleware");
 
-// const router = require("express").Router();
-
-
-// router.get('/read', read);
-// router.post('/addTask', addTask);
-// router.put("/update", updateTask);
-// router.delete("/delete/:id", removeTask);
+const router = require("express").Router();
 
 
-// module.exports = router;
+router.get('/read', checkUser,read );
+router.post('/addTask',checkUser, addTask);
+router.put("/update", checkUser, updateTask);
+router.delete("/delete/:id",checkUser ,removeTask);
+
+
+module.exports = router;

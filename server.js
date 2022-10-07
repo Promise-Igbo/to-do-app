@@ -2,9 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require("./Routes/AuthRoutes");
+const tasksRoutes = require('./Routes/TasksRoutes');
 const cookieParser = require('cookie-parser');
 const app = express();
-const { checkUser } = require("./Middlewares/authMiddleware");
 
 
 app.use(cors({
@@ -17,6 +17,7 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json())
 app.use("/", authRoutes);
+app.use("/", tasksRoutes);
 
 
 /// DATABASE CONNECTION
@@ -33,7 +34,6 @@ mongoose.connect(
 
 
 const PORT = process.env.PORT || 8080;
-
 
 app.listen(PORT, () => {
      console.log(`server running on: ${PORT}`)
