@@ -1,7 +1,7 @@
 const TaskModel = require('../models/task');
 
 module.exports.read = async  (req, res) => {
-  TaskModel.find({}, (err, result) => {
+  TaskModel.find({ addedBy: req.user._id }, (err, result) => {
     if (err) {
       res.send(err);
     } else {
@@ -14,6 +14,8 @@ module.exports.addTask = async  (req, res) => {
   const task = req.body.task;
 
   const newTask = new TaskModel({ task: task });
+  if(req.user) { newTask.addedBy = req.user._id }
+
   await newTask.save();
   res.send("inserted data");
 }
