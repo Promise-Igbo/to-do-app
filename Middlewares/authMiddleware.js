@@ -9,18 +9,19 @@ module.exports.checkUser = (req, res, next) => {
       "Reem Janina super secret key",
       async (err, decodedToken) => {
         if (err) {
-          // res.json({ status: false });
-          next();
+              return res.status(401).json({success: false, error: err});
         } else {
           const user = await User.findById(decodedToken.id);
-          // if (user) res.json({ status: true, user: user.email });
-          // else res.json({ status: false });
-          next();
+          if (user) {
+            next();
+          }
+          else {
+            return res.status(401).json({ success: false, error: 'User not Found!'});
+          }
         }
       }
     );
   } else {
-    // res.json({ status: false });
-    next();
+    res.status(401).json({ success: false, error: 'Token not Found!'});
   }
 };
