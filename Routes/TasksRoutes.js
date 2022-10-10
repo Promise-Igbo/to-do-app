@@ -1,4 +1,4 @@
-const { read, addTask, updateTask, removeTask } = require("../Controllers/AuthControllers");
+const { read, addTask, updateTask, removeTask } = require("../Controllers/TasksControllers");
 const { checkUser } = require("../Middlewares/authMiddleware");
 
 const router = require("express").Router();
