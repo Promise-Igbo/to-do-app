@@ -46,7 +46,9 @@ function TaskItem() {
   }
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/read")
+    Axios.get("http://localhost:8080/read", {
+      withCredentials: true,
+     })
     .then((response)  => {
      setListOfTask(response.data)
    })
