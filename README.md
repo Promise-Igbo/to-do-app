@@ -3,7 +3,7 @@
 
 # To Do List Mern stack
 
-> A Simple Software app made with react for front end and node.js for backend with mongodb for storing the data inside it so the user can do all crud operation get, post, update and delete 🔥💯🚀
+> A Simple Software app made with react for front end and node.js for backend with mongodb for storing the data inside it so the user can do all crud operation get, post, update and delete with the functionality of the authentication and authorization 🔥💯🚀
 
 
 ## Video Demo 🎥
