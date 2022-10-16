@@ -10,18 +10,12 @@ const createToken = (id) => {
 }
 
 const handleErrors = (err) => {
-   let errors = {email:"", password: ""}
+   const errors = {email: "", password: ""}
 
-   if(err.message === "Incorrect Email")
-    errors.email = "This Email is not registered!"
-
-    if(err.message === "Incorrect Password")
-    errors.password = "This password is not correct!"
-
-   if(err.code === 11000){
-    errors.email = "Email Already registered"
-    return errors;
-   }
+   errors.email = err.message === "Incorrect Email" : "This Email is not registered!" : (err.code === 11000 ? "Email Already registered" : "");
+   errors.password = err.message === "Incorrect Password" : "This password is not correct!": "";
+   
+   if (err.code === 11000) return errors;
 
    if(err.message.includes("users validation failed")){
     Object.values(err.errors).forEach((properties) => {
@@ -35,7 +29,7 @@ const handleErrors = (err) => {
 module.exports.register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user =   await UserModel.create({ email, password })
+    const user = await UserModel.create({ email, password })
     const token = createToken(user._id);
 
     res.cookie("jwt", token, {
@@ -44,11 +38,11 @@ module.exports.register = async (req, res, next) => {
       maxAge: maxAge * 1000,
     })
 
-    res.status(201).json({ user: user._id, created: true})
+    res.status(201).json({ user: user._id, created: true })
   } catch (err) {
     console.log(err);
     const errors = handleErrors(err);
-    res.json({ errors, created: false });
+    res.status(500).json({ errors, created: false });
   }
 }
 
@@ -68,7 +62,7 @@ module.exports.login = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     const errors = handleErrors(err);
-    res.json({ errors, created: false });
+    res.status(500).json({ errors, created: false });
   }
 
 }
