@@ -38,7 +38,7 @@ https://user-images.githubusercontent.com/58553711/192377341-8382d9f9-8a46-4d15-
 ### Clone this repository
 
 ```bash
-$ git clone 
+$ git clone https://github.com/Reem-lab/to-do-app.git
 $ cd to-do-app
 
 $ npm install
