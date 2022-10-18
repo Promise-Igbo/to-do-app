@@ -5,7 +5,10 @@ import {
 import Axios from 'axios';
 import './TaskItem.css';
 import Header from './Header';
-import { ToastContainer, toast }from 'react-toastify';
+import {
+  ToastContainer,
+  toast
+} from 'react-toastify';
 
 
 
@@ -15,8 +18,8 @@ function TaskItem() {
 
 
   const generateError = err => toast.error(err, {
-    position:"bottom-right"
- });
+    position: "bottom-right"
+  });
 
   const addTask = () => {
     let flag = true;
@@ -26,8 +29,8 @@ function TaskItem() {
       return;
     })
 
-    if (!flag) { 
-      generateError("Task found please enter a new task") ;
+    if (!flag) {
+      generateError("Task found please enter a new task");
       return
     }
 
@@ -108,11 +111,12 @@ function TaskItem() {
         setTask(e.target.value)
       }
     }
-    /> <
-    button className = 'submitbtn'
-    onClick = {
-      addTask
-    } > Add task < /button>
+    onKeyPress={(e) => { e.key === 'Enter' && addTask(); }} 
+    /> 
+    <button 
+    className = 'submitbtn'
+    onClick={addTask} 
+     > Add task </button>
 
     {
       listOfTasks.length > 0 && listOfTasks.map((val) => ( <
