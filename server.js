@@ -22,7 +22,7 @@ app.use("/", tasksRoutes);
 
 /// DATABASE CONNECTION
 mongoose.connect(
-  "mongodb://localhost:27017/TodoList?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+  "https://typea-server.mongo.cosmos.azure.com:443/",
   { 
     useNewUrlParser: true,
   }
